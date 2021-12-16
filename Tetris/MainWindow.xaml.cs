@@ -22,7 +22,29 @@ namespace Tetris
     {
         public MainWindow()
         {
+            
             InitializeComponent();
+            show();
+        }
+
+        public void show()
+        {
+            
+
+            for (int i = 0; i < 12; i++) 
+            {
+                Rectangle rect = new Rectangle();
+                rect.Width = 45;
+                rect.Height = 50;
+                SolidColorBrush c = new SolidColorBrush();
+                c.Color = Color.FromArgb(255, 255, 255, 0);
+                rect.Fill = c;
+                Grid.SetColumn(rect, i);
+                Grid.SetRow(rect, 0);
+                grid.Children.Add(rect);
+            }
+           
+
         }
     }
 }
