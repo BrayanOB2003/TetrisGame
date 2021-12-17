@@ -20,31 +20,40 @@ namespace Tetris
     /// </summary>
     public partial class MainWindow : Window
     {
+        const int INITIAL_POSITION = 3;
+
         public MainWindow()
         {
             
             InitializeComponent();
-            show();
+            generateAndPaintPiece();
         }
 
-        public void show()
+        public void generateAndPaintPiece() 
         {
-            
+            Piece p = new Piece();
+            p.generate();
+            int[,] form = p.Form;
 
-            for (int i = 0; i < 12; i++) 
+            for (int i = 0; i < form.GetLength(1); i++)
             {
-                Rectangle rect = new Rectangle();
-                rect.Width = 45;
-                rect.Height = 50;
-                SolidColorBrush c = new SolidColorBrush();
-                c.Color = Color.FromArgb(255, 255, 255, 0);
-                rect.Fill = c;
-                Grid.SetColumn(rect, i);
-                Grid.SetRow(rect, 0);
-                grid.Children.Add(rect);
+                for (int j = 0; j < form.GetLength(0); j++)
+                {
+                    if(form[i,j] != p.DEFECT_VALUE)
+                    {
+                        Rectangle rect = new Rectangle();
+                        rect.Width = 45;
+                        rect.Height = 45;
+                        SolidColorBrush c = new SolidColorBrush();
+                        c.Color = Color.FromArgb(255, 255, 255, 0);
+                        rect.Fill = c;
+                        Grid.SetColumn(rect,INITIAL_POSITION + i);
+                        Grid.SetRow(rect, j);
+                        grid.Children.Add(rect);
+                    }
+                }
+                
             }
-           
-
         }
     }
 }
