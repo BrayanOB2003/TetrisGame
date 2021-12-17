@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Tetris"
         mc:Ignorable="d"
         Title="MainWindow" Height="715" Width="600" KeyDown="MovePieceDown">
-    <Grid x:Name="grid" Margin="0,0,0,0">
+    <Grid x:Name="grid">
         <Grid.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                 <GradientStop Color="Black"/>

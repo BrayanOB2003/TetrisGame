@@ -27,11 +27,12 @@ namespace Tetris
         {
             
             InitializeComponent();
-            GenerateAndPaintPiece();
+            
         }
 
         public void GenerateAndPaintPiece() 
         {
+            
             currentPiece = new Piece();
             currentPiece.generate();
             int[,] form = currentPiece.Form;
@@ -52,10 +53,10 @@ namespace Tetris
                             Color = Color.FromArgb(255, 255, 255, 0)
                         };
                         rect.Fill = c;
-                        Grid.SetColumn(rect,INITIAL_POSITION + i);
+                        Grid.SetColumn(rect, INITIAL_POSITION + i);
                         Grid.SetRow(rect, j);
                         currentPiece.CordenadesX.Add(INITIAL_POSITION + i);
-                        currentPiece.Position.Add(INITIAL_POSITION + i,j);
+                        currentPiece.CordenadesY.Add(j);
                         grid.Children.Add(rect);
                     }
                 }
@@ -70,7 +71,7 @@ namespace Tetris
             for (int i = 0; i < currentPiece.CordenadesX.Capacity; i++)
             {
                 int x = currentPiece.CordenadesX[i];
-                int y = (int) currentPiece.Position[x];
+                int y = currentPiece.CordenadesY[i];
                 Rectangle rect = new Rectangle();
                 rect.Width = 45;
                 rect.Height = 45;
@@ -79,7 +80,7 @@ namespace Tetris
                 rect.Fill = c;
                 Grid.SetColumn(rect, x);
                 Grid.SetRow(rect, y + 1);
-                currentPiece.Position[x] = y + 1;
+                currentPiece.CordenadesY[i] = y + 1;
                 grid.Children.Add(rect);
             }
         }
@@ -89,6 +90,10 @@ namespace Tetris
             if (e.Key == Key.Down)
             {
                 PieceDown();
+            }
+            if (e.Key == Key.Space)
+            {
+                GenerateAndPaintPiece();
             }
         }
     }
