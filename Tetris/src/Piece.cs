@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,18 +19,22 @@ namespace Tetris
         private const int DEFECT_VALUE_OF_MATRIX = -1;
         private int id;
         private int[,] form;
-
+        private List<int> cordenadesX;
+        private Hashtable position;
         public Piece()
         {
             form = new int[4, 4];
             initialicedMatrix();
-            
+            cordenadesX = new List<int> ();
+            position = new Hashtable();
         }
 
         public int Id { get => id; set => id = value; }
         public int[,] Form { get => form; set => form = value; }
-
         public int DEFECT_VALUE => DEFECT_VALUE_OF_MATRIX;
+
+        public Hashtable Position { get => position; set => position = value; }
+        public List<int> CordenadesX { get => cordenadesX; set => cordenadesX = value; }
 
         public void initialicedMatrix() 
         {

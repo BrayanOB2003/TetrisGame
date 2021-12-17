@@ -20,39 +20,75 @@ namespace Tetris
     /// </summary>
     public partial class MainWindow : Window
     {
-        const int INITIAL_POSITION = 3;
+        const int INITIAL_POSITION = 4;
+        private Piece currentPiece;
 
         public MainWindow()
         {
             
             InitializeComponent();
-            generateAndPaintPiece();
+            GenerateAndPaintPiece();
         }
 
-        public void generateAndPaintPiece() 
+        public void GenerateAndPaintPiece() 
         {
-            Piece p = new Piece();
-            p.generate();
-            int[,] form = p.Form;
+            currentPiece = new Piece();
+            currentPiece.generate();
+            int[,] form = currentPiece.Form;
 
-            for (int i = 0; i < form.GetLength(1); i++)
+            for (int i = 0; i < form.GetLength(0); i++)
             {
-                for (int j = 0; j < form.GetLength(0); j++)
+                for (int j = 0; j < form.GetLength(1); j++)
                 {
-                    if(form[i,j] != p.DEFECT_VALUE)
+                    if(form[i,j] != currentPiece.DEFECT_VALUE)
                     {
-                        Rectangle rect = new Rectangle();
-                        rect.Width = 45;
-                        rect.Height = 45;
-                        SolidColorBrush c = new SolidColorBrush();
-                        c.Color = Color.FromArgb(255, 255, 255, 0);
+                        Rectangle rect = new Rectangle
+                        {
+                            Width = 45,
+                            Height = 45
+                        };
+                        SolidColorBrush c = new SolidColorBrush
+                        {
+                            Color = Color.FromArgb(255, 255, 255, 0)
+                        };
                         rect.Fill = c;
                         Grid.SetColumn(rect,INITIAL_POSITION + i);
                         Grid.SetRow(rect, j);
+                        currentPiece.CordenadesX.Add(INITIAL_POSITION + i);
+                        currentPiece.Position.Add(INITIAL_POSITION + i,j);
                         grid.Children.Add(rect);
                     }
                 }
                 
+            }
+        }
+
+        public void PieceDown()
+        {
+            grid.Children.Clear();
+            int[,] current = currentPiece.Form;
+            for (int i = 0; i < currentPiece.CordenadesX.Capacity; i++)
+            {
+                int x = currentPiece.CordenadesX[i];
+                int y = (int) currentPiece.Position[x];
+                Rectangle rect = new Rectangle();
+                rect.Width = 45;
+                rect.Height = 45;
+                SolidColorBrush c = new SolidColorBrush();
+                c.Color = Color.FromArgb(255, 255, 255, 0);
+                rect.Fill = c;
+                Grid.SetColumn(rect, x);
+                Grid.SetRow(rect, y + 1);
+                currentPiece.Position[x] = y + 1;
+                grid.Children.Add(rect);
+            }
+        }
+
+        private void MovePieceDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Down)
+            {
+                PieceDown();
             }
         }
     }
