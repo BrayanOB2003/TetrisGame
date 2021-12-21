@@ -96,39 +96,46 @@ namespace Tetris
             grid.Children.Add(currentBlock);
         }
 
-        private void DeletePiece(int x, int y)
+        private void DeletePiece()
         {
-            currentBlock = new Rectangle()
-            {
-                Width = 47,
-                Height = 47
-            };
-            SolidColorBrush c = new SolidColorBrush()
-            {
-                Color = Color.FromRgb(0,0,0)
-            };
-            currentBlock.Fill = c;
-            Grid.SetColumn(currentBlock, x);
-            Grid.SetRow(currentBlock, y);
-            grid.Children.Add(currentBlock);
-        }
-
-        public void PieceDown()
-        {
-            int yInit = currentPiece.CordenadesY[0];
             for (int i = 0; i < currentPiece.CordenadesX.Capacity; i++)
             {
                 int x = currentPiece.CordenadesX[i];
                 int y = currentPiece.CordenadesY[i];
+
+                currentBlock = new Rectangle()
+                {
+                    Width = 47,
+                    Height = 47,
+                    Fill = new SolidColorBrush
+                    {
+                        Color = Color.FromRgb(0, 0, 0)
+                    }
+                };
+                Grid.SetColumn(currentBlock, x);
+                Grid.SetRow(currentBlock, y);
+                grid.Children.Add(currentBlock);
+            }
+        }
+
+        public void PieceDown()
+        {
+            DeletePiece();
+            for (int i = 0; i < currentPiece.CordenadesX.Capacity; i++)
+            {
+                int x = currentPiece.CordenadesX[i];
+                int y = currentPiece.CordenadesY[i];
+                
                 PaintPiece(x, y + 1);
-                DeletePiece(x, y);
+                
                 currentPiece.CordenadesY[i] = y + 1;
             }
+
         }
 
         public void PieceLeft()
         {
-            grid.Children.Clear();
+            DeletePiece();
             for (int i = 0; i < currentPiece.CordenadesX.Capacity; i++)
             {
                 int x = currentPiece.CordenadesX[i];
@@ -140,7 +147,7 @@ namespace Tetris
 
         public void PieceRigth()
         {
-            grid.Children.Clear();
+            DeletePiece();
             for (int i = 0; i < currentPiece.CordenadesX.Capacity; i++)
             {
                 int x = currentPiece.CordenadesX[i];
