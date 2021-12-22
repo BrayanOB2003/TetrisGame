@@ -43,7 +43,7 @@ namespace Tetris
                 {
                     if(form[i,j] != currentPiece.DEFECT_VALUE)
                     {
-                        PaintPiece(INITIAL_POSITION + i, j);
+                        currentPiece.Indexes.Add(PaintPiece(INITIAL_POSITION + i, j));
                         currentPiece.CordenadesX.Add(INITIAL_POSITION + i);
                         currentPiece.CordenadesY.Add(j);
                     }
@@ -52,7 +52,7 @@ namespace Tetris
             }
         }
 
-        private void PaintPiece(int x, int y)
+        private int PaintPiece(int x, int y)
         {
             currentBlock = new Rectangle()
             {
@@ -94,27 +94,15 @@ namespace Tetris
             Grid.SetColumn(currentBlock, x);
             Grid.SetRow(currentBlock, y);
             grid.Children.Add(currentBlock);
+            label1.Content = Convert.ToString(grid.Children.Count);
+            return grid.Children.IndexOf(currentBlock); //Return the index elements of grid
         }
 
         private void DeletePiece()
         {
-            for (int i = 0; i < currentPiece.CordenadesX.Capacity; i++)
+            if(currentPiece != null)
             {
-                int x = currentPiece.CordenadesX[i];
-                int y = currentPiece.CordenadesY[i];
-
-                currentBlock = new Rectangle()
-                {
-                    Width = 47,
-                    Height = 47,
-                    Fill = new SolidColorBrush
-                    {
-                        Color = Color.FromRgb(0, 0, 0)
-                    }
-                };
-                Grid.SetColumn(currentBlock, x);
-                Grid.SetRow(currentBlock, y);
-                grid.Children.Add(currentBlock);
+                grid.Children.RemoveRange(currentPiece.Indexes[0], currentPiece.Indexes[3]);
             }
         }
 
