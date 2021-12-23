@@ -37,6 +37,5 @@
             <ColumnDefinition Width="50*"/>
             <ColumnDefinition Width="50*"/>
         </Grid.ColumnDefinitions>
-        <Label x:Name="label1" Grid.Column="8" Content="Count:" HorizontalAlignment="Left" Margin="40,10,0,0" VerticalAlignment="Top" Grid.ColumnSpan="4" Height="50" Width="150" Grid.RowSpan="2" FontSize="36" Foreground="White"/>
     </Grid>
 </Window>

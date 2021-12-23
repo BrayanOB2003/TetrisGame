@@ -21,14 +21,17 @@ namespace Tetris
         private int[,] form;
         private List<int> cordenadesX, cordenadesY;
         private List<int> indexes; //Indexes of childrens' grid
+        private List<Object> figure;
 
         public Piece()
         {
             form = new int[4, 4];
+            id = -1;
             initialicedMatrix();
             cordenadesX = new List<int> ();
             cordenadesY = new List<int> ();
             indexes = new List<int> ();
+            Figure = new List<Object> ();
         }
 
         public int Id { get => id; set => id = value; }
@@ -37,6 +40,7 @@ namespace Tetris
         public List<int> CordenadesX { get => cordenadesX; set => cordenadesX = value; }
         public List<int> CordenadesY { get => cordenadesY; set => cordenadesY = value; }
         public List<int> Indexes { get => indexes; set => indexes = value; }
+        public List<object> Figure { get => figure; set => figure = value; }
 
         public void initialicedMatrix() 
         {
