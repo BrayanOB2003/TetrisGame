@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Tetris
@@ -20,7 +13,6 @@ namespace Tetris
     /// </summary>
     public partial class MainWindow : Window
     {
-        private const int LEFT_DIRECTION = 0, RIGTH_DIRECTION = 1, DOWN_DIRECTION = 2;
         private const int INITIAL_POSITION = 4;
         private Piece currentPiece;
         private Rectangle currentBlock;
@@ -44,13 +36,17 @@ namespace Tetris
                 {
                     if(form[i,j] != currentPiece.DEFECT_VALUE)
                     {
-                        currentPiece.Indexes.Add(PaintPiece(INITIAL_POSITION + i, j + 1));
+                        currentPiece.Indexes.Add(PaintBlock(INITIAL_POSITION + i, j + 1));
+                        System.Windows.MessageBox.Show("Put");
+
                         currentPiece.CordenadesX.Add(INITIAL_POSITION + i);
                         currentPiece.CordenadesY.Add(j + 1);
                     }
                 }
                 
             }
+            currentPiece.RelativeCordenadesX = currentPiece.CordenadesX.ToList();
+            currentPiece.RelativeCordenadesY = currentPiece.CordenadesY.ToList();
         }
 
         private void PaintBorder()
@@ -60,17 +56,17 @@ namespace Tetris
 
             for (int i = 0; i < colums;i++)
             {
-                PaintPiece(11,i);
-                PaintPiece(0,i);
+                PaintBlock(11,i);
+                PaintBlock(0,i);
             }
 
             for (int i = 0; i < rows; i++)
             {
-                PaintPiece(i,13);
-                PaintPiece(i,0);
+                PaintBlock(i,13);
+                PaintBlock(i,0);
             }
         }
-        private int PaintPiece(int x, int y)
+        private int PaintBlock(int x, int y)
         {
             currentBlock = new Rectangle()
             {
@@ -128,13 +124,13 @@ namespace Tetris
             }
         }
 
-        private bool Colision(int direction)
+        private bool Colision()
         {
             
             System.Collections.IEnumerator elements = grid.Children.GetEnumerator();
 
-            List<int> PieceCoordenadesX = currentPiece.CordenadesX.ToList();
-            List<int> PieceCoordenadesY = currentPiece.CordenadesY.ToList();
+            List<int> PieceCoordenadesX = currentPiece.RelativeCordenadesX.ToList();
+            List<int> PieceCoordenadesY = currentPiece.RelativeCordenadesY.ToList();
             List<int> coordenadesX = new List<int>();
             List<int> coordenadesY = new List<int>();
 
@@ -149,112 +145,72 @@ namespace Tetris
                 
             }
 
-            switch (direction)
+            for (int i = 0; i < PieceCoordenadesX.Count; i++)
             {
-                case 0:
-
-                    for (int i = 0; i < PieceCoordenadesX.Count; i++)
+                for (int j = 0; j < coordenadesX.Count; j++)
+                {
+                    if ((PieceCoordenadesX[i]) == coordenadesX[j])
                     {
-                        for (int j = 0; j < coordenadesX.Count; j++)
+                        if (PieceCoordenadesY[i] == coordenadesY[j])
                         {
-                            if ((PieceCoordenadesX[i] - 1) == coordenadesX[j])
-                            {
-                                if (PieceCoordenadesY[i] == coordenadesY[j])
-                                {
-                                    colision = true;
-                                }
-                            }
+                            colision = true;
+                            break;
                         }
                     }
-
-                    break;
-
-                case 1:
-
-                    for (int i = 0; i < PieceCoordenadesX.Count; i++)
-                    {
-                        for (int j = 0; j < coordenadesX.Count; j++)
-                        {
-                            if ((PieceCoordenadesX[i] + 1) == coordenadesX[j])
-                            {
-                                if (PieceCoordenadesY[i] == coordenadesY[j])
-                                {
-                                    colision = true;
-                                }
-                            }
-                        }
-                    }
-
-                    break;
-
-                case 2:
-
-                    for (int i = 0; i < PieceCoordenadesX.Count;i++)
-                    {
-                        for(int j = 0; j < coordenadesX.Count; j++)
-                        {
-                            if((PieceCoordenadesY[i] + 1) == coordenadesY[j])
-                            {
-                                if(PieceCoordenadesX[i] == coordenadesX[j])
-                                {
-                                    colision = true;
-                                }
-                            }
-                        }
-                    }
-
-                    break;
+                }
             }
-            
+
+            if(!colision)
+            {
+                currentPiece.CordenadesX = PieceCoordenadesX;
+                currentPiece.CordenadesY = PieceCoordenadesY;
+                DeletePiece();
+            } else
+            {
+                currentPiece.RelativeCordenadesX = currentPiece.CordenadesX.ToList();
+                currentPiece.RelativeCordenadesY = currentPiece.CordenadesY.ToList();
+            }
+
             return colision;
+        }
+
+        private void PaintPiece()
+        {
+            for (int i = 0; i < currentPiece.CordenadesX.Capacity; i++)
+            {
+                PaintBlock(currentPiece.CordenadesX[i], currentPiece.CordenadesY[i]);
+            }
         }
 
         public void PieceDown()
         {
-            
-            if(!Colision(DOWN_DIRECTION))
+
+            currentPiece.MoveDown();
+
+            if (!Colision())
             {
-                DeletePiece();
-                for (int i = 0; i < currentPiece.CordenadesX.Capacity; i++)
-                {
-                    int x = currentPiece.CordenadesX[i];
-                    int y = currentPiece.CordenadesY[i];
-
-                    PaintPiece(x, y + 1);
-
-                    currentPiece.CordenadesY[i] = y + 1;
-                }
+                PaintPiece();
             }
 
         }
 
         public void PieceLeft()
         {
-            if(!Colision(LEFT_DIRECTION))
+            currentPiece.MoveLeft();
+
+            if (!Colision())
             {
-                DeletePiece();
-                for (int i = 0; i < currentPiece.CordenadesX.Capacity; i++)
-                {
-                    int x = currentPiece.CordenadesX[i];
-                    int y = currentPiece.CordenadesY[i];
-                    PaintPiece(x - 1, y);
-                    currentPiece.CordenadesX[i] = x - 1;
-                }
+                PaintPiece();
             }
         }
 
         public void PieceRigth()
         {
-            if(!Colision(RIGTH_DIRECTION))
+            currentPiece.MoveRigth();
+
+            if (!Colision())
             {
-                DeletePiece();
-                for (int i = 0; i < currentPiece.CordenadesX.Capacity; i++)
-                {
-                    int x = currentPiece.CordenadesX[i];
-                    int y = currentPiece.CordenadesY[i];
-                    PaintPiece(x + 1, y);
-                    currentPiece.CordenadesX[i] = x + 1;
-                }
+                PaintPiece();
             }
         }
 

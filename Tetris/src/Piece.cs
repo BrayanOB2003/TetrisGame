@@ -17,9 +17,11 @@ namespace Tetris
         private const int PIECE_TYPE_5 = 5;
         private const int PIECE_TYPE_6 = 6;
         private const int DEFECT_VALUE_OF_MATRIX = -1;
+        private const int ABSOLUTE_BLOCK = 3, ABSOLUTE_BLOCK2 = 2; //X coordinates of the obsolute blocks of the pieces
         private int id;
         private int[,] form;
         private List<int> cordenadesX, cordenadesY;
+        private List<int> relativeCordenadesX, relativeCordenadesY;
         private List<int> indexes; //Indexes of childrens' grid
         private List<Object> figure;
 
@@ -27,9 +29,11 @@ namespace Tetris
         {
             form = new int[4, 4];
             id = -1;
-            initialicedMatrix();
+            InitialicedMatrix();
             cordenadesX = new List<int> ();
             cordenadesY = new List<int> ();
+            relativeCordenadesX = new List<int>();
+            relativeCordenadesY = new List<int>();
             indexes = new List<int> ();
             Figure = new List<Object> ();
         }
@@ -41,8 +45,10 @@ namespace Tetris
         public List<int> CordenadesY { get => cordenadesY; set => cordenadesY = value; }
         public List<int> Indexes { get => indexes; set => indexes = value; }
         public List<object> Figure { get => figure; set => figure = value; }
+        public List<int> RelativeCordenadesX { get => relativeCordenadesX; set => relativeCordenadesX = value; }
+        public List<int> RelativeCordenadesY { get => relativeCordenadesY; set => relativeCordenadesY = value; }
 
-        public void initialicedMatrix() 
+        public void InitialicedMatrix() 
         {
             for(int i = 0; i < form.GetLength(0); i++)
             {
@@ -53,7 +59,45 @@ namespace Tetris
             }
         }
 
-        public int[,] generate() 
+        public void Rotate()
+        {
+            switch(id)
+            {
+                case 0:
+
+                    int absoluteX = cordenadesX[ABSOLUTE_BLOCK];
+                    int absoluteY = cordenadesY[ABSOLUTE_BLOCK];
+
+                    
+                    break;
+
+                case 1:
+
+                    break;
+
+                case 2:
+
+                    break;
+
+                case 3:
+
+                    break;
+
+                case 4:
+
+                    break;
+
+                case 5:
+
+                    break;
+
+                case 6:
+                    
+                    break;
+            }
+        }
+
+        public int[,] generate()
         {
             int type = new Random().Next(0,7);
 
@@ -176,5 +220,27 @@ namespace Tetris
             return piece;
         }
 
+        public void MoveLeft()
+        {
+            for(int i = 0; i < relativeCordenadesX.Count; i++)
+            {
+                relativeCordenadesX[i] -= 1;
+            }
+        }
+
+        public void MoveRigth()
+        {
+            for (int i = 0; i < relativeCordenadesX.Count; i++)
+            {
+                relativeCordenadesX[i] += 1;
+            }
+        }
+        public void MoveDown()
+        {
+            for (int i = 0; i < relativeCordenadesY.Count; i++)
+            {
+                relativeCordenadesY[i] += 1;
+            }
+        }
     }
 }
