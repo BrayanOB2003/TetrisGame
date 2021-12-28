@@ -36,11 +36,21 @@ namespace Tetris
                 {
                     if(form[i,j] != currentPiece.DEFECT_VALUE)
                     {
-                        currentPiece.Indexes.Add(PaintBlock(INITIAL_POSITION + i, j + 1));
-                        System.Windows.MessageBox.Show("Put");
+                        if(i == 1 && j == 2)
+                        {
+                            currentPiece.Indexes.Add(PaintBlock(INITIAL_POSITION + j, i));
 
-                        currentPiece.CordenadesX.Add(INITIAL_POSITION + i);
-                        currentPiece.CordenadesY.Add(j + 1);
+                            currentPiece.CordenadesX.Insert(0, INITIAL_POSITION + j);
+                            currentPiece.CordenadesY.Insert(0, i);
+                            
+                        } else
+                        {
+                            currentPiece.Indexes.Add(PaintBlock(INITIAL_POSITION + j, i));
+
+                            currentPiece.CordenadesX.Add(INITIAL_POSITION + j);
+                            currentPiece.CordenadesY.Add(i);
+
+                        }
                     }
                 }
                 
@@ -145,7 +155,7 @@ namespace Tetris
                 
             }
 
-            for (int i = 0; i < PieceCoordenadesX.Count; i++)
+            for (int i = 0; i < PieceCoordenadesX.Count && colision == false; i++)
             {
                 for (int j = 0; j < coordenadesX.Count; j++)
                 {
@@ -214,6 +224,22 @@ namespace Tetris
             }
         }
 
+        public void PieceRotate()
+        {
+            int[,] newForm = currentPiece.Rotate();
+
+            if (!Colision())
+            {
+                currentPiece.Form = newForm;
+                PaintPiece();
+            }
+            else 
+            {
+                currentPiece.FormType -= 1; //Reset the shape type if there is a colision
+            }
+            
+        }
+
         private void MovePiece(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Down)
@@ -226,6 +252,10 @@ namespace Tetris
             }else if (e.Key == Key.Left)
             {
                 PieceLeft();
+            }
+            else if(e.Key == Key.Up)
+            {
+                PieceRotate();
             }
             else if (e.Key == Key.Space)
             {
